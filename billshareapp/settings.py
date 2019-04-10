@@ -30,14 +30,16 @@ ENV_ROLE = get_env_variable('ENV_ROLE')
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'mfh!np(ma%pea-5si%7k#=sbh0weua3vhxj12&5r&$mx0g(c*_'
+SECRET_KEY = get_env_variable('BILLSHARE_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
+BILLSHARE_DB_PASS = False
 if ENV_ROLE == 'development':
     DEBUG = True
     TEMPLATE_DEBUG = DEBUG
+    BILLSHARE_DB_PASS = get_env_variable('BILLSHARE_DB_PASS')
 
 ALLOWED_HOSTS = []
 
@@ -92,7 +94,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'billshare',
         'USER': 'postgres',
-        'PASSWORD': 'melangeatrophy',
+        'PASSWORD': BILLSHARE_DB_PASS,
         'HOST': 'localhost',
         'PORT': '5439',
     }
