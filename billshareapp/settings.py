@@ -11,11 +11,21 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from django.core.exceptions import ImproperlyConfigured
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+# key import error handling
+def get_env_variable(var_name):
+    """Get the env var or return exception """
+    try:
+        return os.environ[var_name]
+    except KeyError:
+        err_msg = "Set the %s environment variable" % var_name
+        raise ImproperlyConfigured(err_msg)
 
+# Get ENV VARIABLES key
+ENV_ROLE = get_env_variable('ENV_ROLE')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
@@ -23,7 +33,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'mfh!np(ma%pea-5si%7k#=sbh0weua3vhxj12&5r&$mx0g(c*_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+TEMPLATE_DEBUG = DEBUG
+if ENV_ROLE == 'development':
+    DEBUG = True
+    TEMPLATE_DEBUG = DEBUG
 
 ALLOWED_HOSTS = []
 
@@ -75,8 +89,12 @@ WSGI_APPLICATION = 'billshareapp.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'billshare',
+        'USER': 'postgres',
+        'PASSWORD': 'melangeatrophy',
+        'HOST': 'localhost',
+        'PORT': '5439',
     }
 }
 
